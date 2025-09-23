@@ -655,7 +655,7 @@ export default function LottoPage() {
                         picks.map((n) => (
                           <span
                             key={n}
-                            className="rounded-full border border-white/20 px-2 py-0.5 text-xs text-center"
+                            className="rounded-full border border-white/20 px-2 py-0.5 text-xs text-center text-white"
                           >
                             {n}
                           </span>
@@ -762,7 +762,7 @@ export default function LottoPage() {
               {!animating && (
                 <div className="flex justify-end gap-2">
                   <button
-                    className="rounded-lg border px-3 py-1 text-sm hover:bg-white/10"
+                    className="rounded-lg border px-3 py-1 text-sm text-white hover:bg-white/10"
                     onClick={() => {
                       playSound("/sfx/ball.mp3");
                       playAgainSameNumbers();
@@ -771,7 +771,7 @@ export default function LottoPage() {
                     같은 번호로 다시하기
                   </button>
                   <button
-                    className="rounded-lg border px-3 py-1 text-sm hover:bg-white/10"
+                    className="rounded-lg border px-3 py-1 text-sm text-white hover:bg-white/10"
                     onClick={() => {
                       playSound("/sfx/ball.mp3");
                       playWithNewNumbers();
@@ -781,7 +781,7 @@ export default function LottoPage() {
                     새 번호로 다시하기
                   </button>
                   <button
-                    className="rounded-lg border px-3 py-1 text-sm hover:bg-white/10"
+                    className="rounded-lg border px-3 py-1 text-sm text-white hover:bg-white/10"
                     onClick={() => {
                       setShowModal(false);
                       setShouldConfetti(false);
