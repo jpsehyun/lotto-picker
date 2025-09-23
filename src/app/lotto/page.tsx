@@ -512,8 +512,8 @@ export default function LottoPage() {
   /* ----------------------------------------------------------------- */
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center bg-black">
-      <div className="relative z-10 w-full max-w-screen-xl px-6">
+    <div className="min-h-screen flex items-center justify-center bg-black">
+      <div className="w-full mx-auto max-w-screen-xl px-6">
         <h1 className="mb-4 text-2xl font-semibold">Lotto 6/45 Picker</h1>
 
         {/* Ticket image + overlay */}
