@@ -513,12 +513,21 @@ export default function LottoPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-black">
-      <div className="mx-auto max-w-screen-xl px-6">
-        <h1 className="mb-4 text-2xl font-semibold text-white">Lotto 6/45 Picker</h1>
+      <div
+        className="mx-auto px-3 sm:px-6"
+        style={{ width: "min(1100px, 100%)" }}
+      >
+        <h1 className="mb-4 text-2xl sm:text-3xl font-semibold text-white">
+          Lotto 6/45 Picker
+        </h1>
 
         {/* Ticket image + overlay */}
         <div
-          className="relative w-full"
+          className="
+    relative mx-auto
+    w-[min(95vw,1100px)]   /* mobile: almost full width; desktop: cap */
+    sm:w-[min(92vw,1100px)]
+  "
           style={{ aspectRatio: `${IMG_W}/${IMG_H}` }}
         >
           <Image
@@ -526,7 +535,7 @@ export default function LottoPage() {
             alt="Lotto ticket"
             fill
             priority
-            sizes="(max-width: 1100px) 100vw, 1100px"
+            sizes="(max-width: 640px) 95vw, (max-width: 1024px) 92vw, 1100px"
             style={{ objectFit: "contain" }}
           />
 
@@ -694,7 +703,9 @@ export default function LottoPage() {
             <div className="relative w-[min(720px,92vw)] overflow-hidden rounded-2xl border bg-black p-6 shadow-xl">
               {shouldConfetti && <ConfettiCanvas fire={true} />}
 
-              <div className="mb-4 text-lg font-semibold text-white">Draw Results</div>
+              <div className="mb-4 text-lg font-semibold text-white">
+                Draw Results
+              </div>
 
               {/* Animated balls */}
               <div className="mb-5 flex flex-wrap items-center gap-3">
