@@ -513,8 +513,8 @@ export default function LottoPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-black">
-      <div className="w-full mx-auto max-w-screen-xl px-6">
-        <h1 className="mb-4 text-2xl font-semibold">Lotto 6/45 Picker</h1>
+      <div className="mx-auto max-w-[1100px] px-6">
+        <h1 className="mb-4 text-2xl font-semibold text-white">Lotto 6/45 Picker</h1>
 
         {/* Ticket image + overlay */}
         <div
@@ -644,7 +644,7 @@ export default function LottoPage() {
                   ].join(" ")}
                 >
                   {/* label */}
-                  <div className="mx-auto mb-3 inline-block rounded-full border border-white/15 px-3 py-1 text-xs font-semibold tracking-wide">
+                  <div className="mx-auto mb-3 inline-block rounded-full border border-white/15 px-3 py-1 text-xs font-semibold tracking-wide text-white">
                     Sheet {p}
                   </div>
 
@@ -677,7 +677,7 @@ export default function LottoPage() {
               onClick={() => {
                 drawAndEvaluate();
               }}
-              className="rounded-xl bg-gradient-to-r from-pink-500 to-yellow-500 px-6 py-2 text-sm font-semibold text-white shadow-md transition hover:scale-[1.02]"
+              className="rounded-xl bg-gradient-to-r from-pink-500 to-yellow-500 px-6 py-2 text-sm font-semibold text-white shadow-md transition hover:scale-[1.02] text-white"
             >
               Draw (6 + Bonus)
             </button>
