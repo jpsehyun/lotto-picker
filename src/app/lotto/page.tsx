@@ -550,6 +550,14 @@ export default function LottoPage() {
               const panelFull = selected[b.panel].size >= MAX_PER_PANEL;
               const canClick = isOn || !panelFull;
 
+              // dark theme tokens (stable across devices)
+              const selFill = "#111827"; // gray-900
+              const selStroke = "#1f2937"; // gray-800
+              const baseFill = "rgba(255,255,255,0.02)";
+              const baseStroke = "rgba(0,0,0,0.25)";
+              const txtOff = "#111827"; // dark text on white ticket
+              const txtOn = "#ffffff"; // white on selected background
+
               return (
                 <g key={`${b.panel}-${b.num}`}>
                   <rect
@@ -559,14 +567,8 @@ export default function LottoPage() {
                     height={b.h}
                     rx={6}
                     ry={6}
-                    fill={
-                      isOn
-                        ? "rgba(0,0,0,0.85)"
-                        : panelFull
-                        ? "rgba(255,255,255,0.04)"
-                        : "rgba(255,255,255,0.01)"
-                    }
-                    stroke={isOn ? "rgba(0,0,0,0.9)" : "rgba(0,0,0,0.15)"}
+                    fill={isOn ? selFill : baseFill}
+                    stroke={isOn ? selStroke : baseStroke}
                     strokeWidth={isOn ? 2 : 1}
                     style={{ cursor: canClick ? "pointer" : "not-allowed" }}
                     onClick={() => canClick && toggle(b.panel, b.num)}
@@ -577,7 +579,7 @@ export default function LottoPage() {
                     textAnchor="middle"
                     fontSize={18}
                     fontFamily="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto"
-                    fill={isOn ? "white" : "black"}
+                    fill={isOn ? txtOn : txtOff} // 👈 dark when off, white when selected
                     pointerEvents="none"
                   >
                     {b.num}
