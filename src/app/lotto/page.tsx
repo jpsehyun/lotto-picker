@@ -513,7 +513,7 @@ export default function LottoPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-black">
-      <div className="mx-auto max-w-[1100px] px-6">
+      <div className="mx-auto max-w-screen-xl px-6">
         <h1 className="mb-4 text-2xl font-semibold text-white">Lotto 6/45 Picker</h1>
 
         {/* Ticket image + overlay */}
@@ -631,40 +631,39 @@ export default function LottoPage() {
         {/* ===== Refreshed Sheets section ===== */}
         <section className="mt-6">
           {/* 5-up row to mirror the real ticket */}
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5 items-stretch">
             {PANELS.map((p) => {
               const picks = Array.from(selected[p]).sort((a, b) => a - b);
               return (
                 <div
                   key={p}
                   className={[
+                    "w-full",
                     "rounded-2xl border p-4 text-center shadow-sm",
                     "border-white/10",
                     PANEL_TINT[p],
                   ].join(" ")}
                 >
-                  {/* label */}
                   <div className="mx-auto mb-3 inline-block rounded-full border border-white/15 px-3 py-1 text-xs font-semibold tracking-wide text-white">
                     Sheet {p}
                   </div>
 
-                  {/* chips */}
-                  <div className="min-h-[36px]">
-                    {picks.length ? (
-                      <div className="grid grid-cols-3 gap-2 justify-items-center">
-                        {picks.map((n) => (
+                  {/* keep height stable + always render grid */}
+                  <div className="min-h-[48px] min-w-[150px]">
+                    <div className="grid grid-cols-3 gap-2 justify-items-center">
+                      {picks.length ? (
+                        picks.map((n) => (
                           <span
                             key={n}
                             className="rounded-full border border-white/20 px-2 py-0.5 text-xs text-center"
-                            title={`Selected ${n}`}
                           >
                             {n}
                           </span>
-                        ))}
-                      </div>
-                    ) : (
-                      <span className="opacity-50">—</span>
-                    )}
+                        ))
+                      ) : (
+                        <span className="col-span-3 opacity-50">—</span>
+                      )}
+                    </div>
                   </div>
                 </div>
               );
@@ -677,7 +676,7 @@ export default function LottoPage() {
               onClick={() => {
                 drawAndEvaluate();
               }}
-              className="rounded-xl bg-gradient-to-r from-pink-500 to-yellow-500 px-6 py-2 text-sm font-semibold text-white shadow-md transition hover:scale-[1.02] text-white"
+              className="rounded-xl bg-gradient-to-r from-pink-500 to-yellow-500 px-6 py-2 text-sm font-semibold text-white shadow-md transition hover:scale-[1.02]"
             >
               Draw (6 + Bonus)
             </button>
@@ -695,7 +694,7 @@ export default function LottoPage() {
             <div className="relative w-[min(720px,92vw)] overflow-hidden rounded-2xl border bg-black p-6 shadow-xl">
               {shouldConfetti && <ConfettiCanvas fire={true} />}
 
-              <div className="mb-4 text-lg font-semibold">Draw Results</div>
+              <div className="mb-4 text-lg font-semibold text-white">Draw Results</div>
 
               {/* Animated balls */}
               <div className="mb-5 flex flex-wrap items-center gap-3">
@@ -723,16 +722,16 @@ export default function LottoPage() {
 
               {!animating && (
                 <>
-                  <div className="mb-2 text-sm">
+                  <div className="mb-2 text-sm text-white">
                     당첨번호:{" "}
                     <span className="text-base">{winning.join(", ")}</span>{" "}
-                    <span className="ml-2 text-sm opacity-80">
+                    <span className="ml-2 text-sm opacity-80 ">
                       보너스: {bonus}
                     </span>
                   </div>
 
                   <div className="mb-4">
-                    <table className="w-full text-sm">
+                    <table className="w-full text-sm text-white">
                       <thead className="text-left opacity-70">
                         <tr>
                           <th className="py-1">Sheet</th>
