@@ -513,187 +513,179 @@ export default function LottoPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-black">
-      <div
-        className="mx-auto px-3 sm:px-6"
-        style={{ width: "min(1100px, 100%)" }}
-      >
+      <div className="mx-auto w-full max-w-[1100px] px-3 sm:px-6">
         <h1 className="mb-4 text-2xl sm:text-3xl font-semibold text-white">
           Lotto 6/45 Picker
         </h1>
 
-        {/* Ticket image + overlay */}
-        <div
-          className="
-    relative mx-auto
-    w-[min(95vw,1100px)]   /* mobile: almost full width; desktop: cap */
-    sm:w-[min(92vw,1100px)]
-  "
-          style={{ aspectRatio: `${IMG_W}/${IMG_H}` }}
-        >
-          <Image
-            src="/img.jpg"
-            alt="Lotto ticket"
-            fill
-            priority
-            sizes="(max-width: 640px) 95vw, (max-width: 1024px) 92vw, 1100px"
-            style={{ objectFit: "contain" }}
-          />
+        {/* Unified grid so Lotto + 5 sheets align */}
+        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-5">
+          {/* Ticket image spans all 5 columns on large screens */}
+          <div className="relative col-span-1 sm:col-span-2 lg:col-span-5">
+            <div
+              className="relative w-full"
+              style={{ aspectRatio: `${IMG_W}/${IMG_H}` }}
+            >
+              <Image
+                src="/img.jpg"
+                alt="Lotto ticket"
+                fill
+                priority
+                className="object-contain"
+              />
 
-          <svg
-            viewBox={`0 0 ${IMG_W} ${IMG_H}`}
-            className="absolute inset-0"
-            aria-label="clickable number overlay"
-          >
-            {/* Number grid */}
-            {boxes.map((b) => {
-              const isOn = selected[b.panel].has(b.num);
-              const panelFull = selected[b.panel].size >= MAX_PER_PANEL;
-              const canClick = isOn || !panelFull;
+              {/* SVG overlay */}
+              <svg
+                viewBox={`0 0 ${IMG_W} ${IMG_H}`}
+                className="absolute inset-0"
+                aria-label="clickable number overlay"
+              >
+                {/* Number grid */}
+                {boxes.map((b) => {
+                  const isOn = selected[b.panel].has(b.num);
+                  const panelFull = selected[b.panel].size >= MAX_PER_PANEL;
+                  const canClick = isOn || !panelFull;
 
-              // dark theme tokens (stable across devices)
-              const selFill = "#111827"; // gray-900
-              const selStroke = "#1f2937"; // gray-800
-              const baseFill = "rgba(255,255,255,0.02)";
-              const baseStroke = "rgba(0,0,0,0.25)";
-              const txtOff = "#111827"; // dark text on white ticket
-              const txtOn = "#ffffff"; // white on selected background
+                  const selFill = "#111827";
+                  const selStroke = "#1f2937";
+                  const baseFill = "rgba(255,255,255,0.02)";
+                  const baseStroke = "rgba(0,0,0,0.25)";
+                  const txtOff = "#111827";
+                  const txtOn = "#ffffff";
 
-              return (
-                <g key={`${b.panel}-${b.num}`}>
-                  <rect
-                    x={b.x}
-                    y={b.y}
-                    width={b.w}
-                    height={b.h}
-                    rx={6}
-                    ry={6}
-                    fill={isOn ? selFill : baseFill}
-                    stroke={isOn ? selStroke : baseStroke}
-                    strokeWidth={isOn ? 2 : 1}
-                    style={{ cursor: canClick ? "pointer" : "not-allowed" }}
-                    onClick={() => canClick && toggle(b.panel, b.num)}
-                  />
-                  <text
-                    x={b.cx}
-                    y={b.cy + 4}
-                    textAnchor="middle"
-                    fontSize={18}
-                    fontFamily="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto"
-                    fill={isOn ? txtOn : txtOff} // 👈 dark when off, white when selected
-                    pointerEvents="none"
-                  >
-                    {b.num}
-                  </text>
-                </g>
-              );
-            })}
+                  return (
+                    <g key={`${b.panel}-${b.num}`}>
+                      <rect
+                        x={b.x}
+                        y={b.y}
+                        width={b.w}
+                        height={b.h}
+                        rx={6}
+                        ry={6}
+                        fill={isOn ? selFill : baseFill}
+                        stroke={isOn ? selStroke : baseStroke}
+                        strokeWidth={isOn ? 2 : 1}
+                        style={{ cursor: canClick ? "pointer" : "not-allowed" }}
+                        onClick={() => canClick && toggle(b.panel, b.num)}
+                      />
+                      <text
+                        x={b.cx}
+                        y={b.cy + 4}
+                        textAnchor="middle"
+                        fontSize={18}
+                        fontFamily="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto"
+                        fill={isOn ? txtOn : txtOff}
+                        pointerEvents="none"
+                      >
+                        {b.num}
+                      </text>
+                    </g>
+                  );
+                })}
 
-            {/* Clickable printed checkboxes */}
-            {controls.map((c) => {
-              const size = selected[c.panel].size;
-              const isAuto = c.kind === "auto";
+                {/* Clickable printed checkboxes */}
+                {controls.map((c) => {
+                  const size = selected[c.panel].size;
+                  const isAuto = c.kind === "auto";
 
-              const handle = () => {
-                if (isAuto) autoFillPanel(c.panel);
-                else if (size > 0) clearPanel(c.panel);
-              };
+                  const handle = () => {
+                    if (isAuto) autoFillPanel(c.panel);
+                    else if (size > 0) clearPanel(c.panel);
+                  };
 
-              const isDisabled = !isAuto && size === 0;
-              const isChecked = isAuto && autoTicked[c.panel];
+                  const isDisabled = !isAuto && size === 0;
+                  const isChecked = isAuto && autoTicked[c.panel];
 
-              return (
-                <g
-                  key={`${c.panel}-${c.kind}`}
-                  onClick={handle}
-                  style={{ cursor: isDisabled ? "not-allowed" : "pointer" }}
-                >
-                  <rect
-                    x={c.x}
-                    y={c.y}
-                    width={c.w}
-                    height={c.h}
-                    rx={3}
-                    ry={3}
-                    fill="rgba(255,255,255,0.001)"
-                    stroke={
-                      isDisabled ? "rgba(0,0,0,0.15)" : "rgba(0,0,0,0.35)"
-                    }
-                    strokeWidth={1}
-                  />
-                  {isChecked && (
-                    <text
-                      x={c.x + c.w / 2}
-                      y={c.y + c.h / 2 + 5}
-                      textAnchor="middle"
-                      fontSize={16}
-                      fontFamily="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto"
-                      fill="black"
-                      pointerEvents="none"
+                  return (
+                    <g
+                      key={`${c.panel}-${c.kind}`}
+                      onClick={handle}
+                      style={{
+                        cursor: isDisabled ? "not-allowed" : "pointer",
+                      }}
                     >
-                      ✓
-                    </text>
-                  )}
-                </g>
-              );
-            })}
-          </svg>
-        </div>
-
-        {/* ===== Refreshed Sheets section ===== */}
-        <section className="mt-6">
-          {/* 5-up row to mirror the real ticket */}
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5 items-stretch">
-            {PANELS.map((p) => {
-              const picks = Array.from(selected[p]).sort((a, b) => a - b);
-              return (
-                <div
-                  key={p}
-                  className={[
-                    "w-full",
-                    "rounded-2xl border p-4 text-center shadow-sm",
-                    "border-white/10",
-                    PANEL_TINT[p],
-                  ].join(" ")}
-                >
-                  <div className="mx-auto mb-3 inline-block rounded-full border border-white/15 px-3 py-1 text-xs font-semibold tracking-wide text-white">
-                    Sheet {p}
-                  </div>
-
-                  {/* keep height stable + always render grid */}
-                  <div className="min-h-[48px] min-w-[150px]">
-                    <div className="grid grid-cols-3 gap-2 justify-items-center">
-                      {picks.length ? (
-                        picks.map((n) => (
-                          <span
-                            key={n}
-                            className="rounded-full border border-white/20 px-2 py-0.5 text-xs text-center text-white"
-                          >
-                            {n}
-                          </span>
-                        ))
-                      ) : (
-                        <span className="col-span-3 opacity-50">—</span>
+                      <rect
+                        x={c.x}
+                        y={c.y}
+                        width={c.w}
+                        height={c.h}
+                        rx={3}
+                        ry={3}
+                        fill="rgba(255,255,255,0.001)"
+                        stroke={
+                          isDisabled ? "rgba(0,0,0,0.15)" : "rgba(0,0,0,0.35)"
+                        }
+                        strokeWidth={1}
+                      />
+                      {isChecked && (
+                        <text
+                          x={c.x + c.w / 2}
+                          y={c.y + c.h / 2 + 5}
+                          textAnchor="middle"
+                          fontSize={16}
+                          fontFamily="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto"
+                          fill="black"
+                          pointerEvents="none"
+                        >
+                          ✓
+                        </text>
                       )}
-                    </div>
+                    </g>
+                  );
+                })}
+              </svg>
+            </div>
+          </div>
+
+          {/* Five responsive sheet cards (1→2→5 cols) */}
+          {PANELS.map((p) => {
+            const picks = Array.from(selected[p]).sort((a, b) => a - b);
+            return (
+              <div
+                key={p}
+                className={[
+                  "w-full h-full",
+                  "rounded-2xl border p-4 text-center shadow-sm",
+                  "border-white/10",
+                  PANEL_TINT[p],
+                ].join(" ")}
+              >
+                <div className="mx-auto mb-3 inline-block rounded-full border border-white/15 px-3 py-1 text-xs font-semibold tracking-wide text-white">
+                  Sheet {p}
+                </div>
+
+                <div className="min-h-[48px] min-w-[150px]">
+                  <div className="grid grid-cols-3 gap-2 justify-items-center">
+                    {picks.length ? (
+                      picks.map((n) => (
+                        <span
+                          key={n}
+                          className="rounded-full border border-white/20 px-2 py-0.5 text-xs text-center text-white"
+                        >
+                          {n}
+                        </span>
+                      ))
+                    ) : (
+                      <span className="col-span-3 opacity-50">—</span>
+                    )}
                   </div>
                 </div>
-              );
-            })}
-          </div>
+              </div>
+            );
+          })}
+        </div>
 
-          {/* centered Draw button below all sheets */}
-          <div className="mt-4 flex justify-center">
-            <button
-              onClick={() => {
-                drawAndEvaluate();
-              }}
-              className="rounded-xl bg-gradient-to-r from-pink-500 to-yellow-500 px-6 py-2 text-sm font-semibold text-white shadow-md transition hover:scale-[1.02]"
-            >
-              Draw (6 + Bonus)
-            </button>
-          </div>
-        </section>
-        {/* ==================================== */}
+        {/* Draw button centered below sheets */}
+        <div className="mt-4 flex justify-center">
+          <button
+            onClick={() => {
+              drawAndEvaluate();
+            }}
+            className="rounded-xl bg-gradient-to-r from-pink-500 to-yellow-500 px-6 py-2 text-sm font-semibold text-white shadow-md transition hover:scale-[1.02]"
+          >
+            Draw (6 + Bonus)
+          </button>
+        </div>
 
         {/* Modal */}
         {showModal && (
@@ -722,9 +714,7 @@ export default function LottoPage() {
                       animating ? "animate-spin" : "",
                     ].join(" ")}
                     style={
-                      animating
-                        ? { animationDuration: `${SPIN_SEC}s` }
-                        : undefined
+                      animating ? { animationDuration: `${SPIN_SEC}s` } : undefined
                     }
                     title={i === 6 ? "Bonus" : `Ball ${i + 1}`}
                   >
@@ -738,9 +728,7 @@ export default function LottoPage() {
                   <div className="mb-2 text-sm text-white">
                     당첨번호:{" "}
                     <span className="text-base">{winning.join(", ")}</span>{" "}
-                    <span className="ml-2 text-sm opacity-80 ">
-                      보너스: {bonus}
-                    </span>
+                    <span className="ml-2 text-sm opacity-80 ">보너스: {bonus}</span>
                   </div>
 
                   <div className="mb-4">
@@ -758,9 +746,7 @@ export default function LottoPage() {
                         {results.map((r) => (
                           <tr key={r.panel}>
                             <td className="py-1 font-medium">{r.panel}</td>
-                            <td className="py-1">
-                              {r.picks.join(", ") || "—"}
-                            </td>
+                            <td className="py-1">{r.picks.join(", ") || "—"}</td>
                             <td className="py-1">{r.matchCount}</td>
                             <td className="py-1">{r.bonusMatch ? "✓" : "—"}</td>
                             <td className="py-1">{r.rank}</td>
@@ -807,6 +793,7 @@ export default function LottoPage() {
             </div>
           </div>
         )}
+
         {showInstruction && (
           <div className="fixed inset-0 z-50 flex items-center justify-center">
             {/* background overlay */}
@@ -822,27 +809,17 @@ export default function LottoPage() {
               </h2>
 
               <ul className="space-y-3 text-sm leading-relaxed">
+                <li>1️⃣ 각 용지(A–E)에서 원하는 번호를 최대 6개까지 선택하세요.</li>
                 <li>
-                  1️⃣ 각 용지(A–E)에서 원하는 번호를 최대 6개까지 선택하세요.
+                  2️⃣ <span className="font-semibold">자동</span> 버튼으로 무작위 선택을 할 수 있고,{" "}
+                  <span className="font-semibold">취소</span> 버튼으로 초기화할 수 있습니다.
                 </li>
                 <li>
-                  2️⃣ <span className="font-semibold">자동</span> 버튼으로 무작위
-                  선택을 할 수 있고, <span className="font-semibold">취소</span>{" "}
-                  버튼으로 초기화할 수 있습니다.
-                </li>
-                <li>
-                  3️⃣ 준비가 되면{" "}
-                  <span className="font-semibold">추첨하기 (6 + 보너스)</span>{" "}
+                  3️⃣ 준비가 되면 <span className="font-semibold">추첨하기 (6 + 보너스)</span>{" "}
                   버튼을 눌러 결과를 확인하세요.
                 </li>
-                <li>
-                  4️⃣ 결과 창에서 당첨 번호와 각 용지의 등수를 확인할 수
-                  있습니다.
-                </li>
-                <li>
-                  5️⃣ 일부 용지를 비워둬도 괜찮습니다. 단, 번호를 고른 용지는
-                  반드시 6개를 모두 선택해야 합니다.
-                </li>
+                <li>4️⃣ 결과 창에서 당첨 번호와 각 용지의 등수를 확인할 수 있습니다.</li>
+                <li>5️⃣ 일부 용지를 비워둬도 괜찮습니다. 단, 번호를 고른 용지는 반드시 6개를 모두 선택해야 합니다.</li>
               </ul>
 
               <div className="mt-6 flex justify-end">
