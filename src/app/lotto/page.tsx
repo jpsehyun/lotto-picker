@@ -540,46 +540,33 @@ export default function LottoPage() {
                 className="absolute inset-0"
                 aria-label="clickable number overlay"
               >
-                {/* Number grid */}
+                {/* Number grid w/o text*/}
                 {boxes.map((b) => {
                   const isOn = selected[b.panel].has(b.num);
                   const panelFull = selected[b.panel].size >= MAX_PER_PANEL;
                   const canClick = isOn || !panelFull;
 
-                  const selFill = "#111827";
+                  // Colors
+                  const selFill = "rgba(17, 24, 39, 0.7)"; // semi-transparent dark grey
                   const selStroke = "#1f2937";
                   const baseFill = "rgba(255,255,255,0.02)";
                   const baseStroke = "rgba(0,0,0,0.25)";
-                  const txtOff = "#111827";
-                  const txtOn = "#ffffff";
 
                   return (
-                    <g key={`${b.panel}-${b.num}`}>
-                      <rect
-                        x={b.x}
-                        y={b.y}
-                        width={b.w}
-                        height={b.h}
-                        rx={6}
-                        ry={6}
-                        fill={isOn ? selFill : baseFill}
-                        stroke={isOn ? selStroke : baseStroke}
-                        strokeWidth={isOn ? 2 : 1}
-                        style={{ cursor: canClick ? "pointer" : "not-allowed" }}
-                        onClick={() => canClick && toggle(b.panel, b.num)}
-                      />
-                      <text
-                        x={b.cx}
-                        y={b.cy + 4}
-                        textAnchor="middle"
-                        fontSize={18}
-                        fontFamily="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto"
-                        fill={isOn ? txtOn : txtOff}
-                        pointerEvents="none"
-                      >
-                        {b.num}
-                      </text>
-                    </g>
+                    <rect
+                      key={`${b.panel}-${b.num}`}
+                      x={b.x}
+                      y={b.y}
+                      width={b.w}
+                      height={b.h}
+                      rx={6}
+                      ry={6}
+                      fill={isOn ? selFill : baseFill}
+                      stroke={isOn ? selStroke : baseStroke}
+                      strokeWidth={isOn ? 2 : 1}
+                      style={{ cursor: canClick ? "pointer" : "not-allowed" }}
+                      onClick={() => canClick && toggle(b.panel, b.num)}
+                    />
                   );
                 })}
 
@@ -654,7 +641,7 @@ export default function LottoPage() {
                   Sheet {p}
                 </div>
 
-                <div className="min-h-[48px] min-w-[150px]">
+                <div className="min-h-[50px] min-w-[150px]">
                   <div className="grid grid-cols-3 gap-2 justify-items-center">
                     {picks.length ? (
                       picks.map((n) => (
@@ -714,7 +701,9 @@ export default function LottoPage() {
                       animating ? "animate-spin" : "",
                     ].join(" ")}
                     style={
-                      animating ? { animationDuration: `${SPIN_SEC}s` } : undefined
+                      animating
+                        ? { animationDuration: `${SPIN_SEC}s` }
+                        : undefined
                     }
                     title={i === 6 ? "Bonus" : `Ball ${i + 1}`}
                   >
@@ -728,7 +717,9 @@ export default function LottoPage() {
                   <div className="mb-2 text-sm text-white">
                     당첨번호:{" "}
                     <span className="text-base">{winning.join(", ")}</span>{" "}
-                    <span className="ml-2 text-sm opacity-80 ">보너스: {bonus}</span>
+                    <span className="ml-2 text-sm opacity-80 ">
+                      보너스: {bonus}
+                    </span>
                   </div>
 
                   <div className="mb-4">
@@ -746,7 +737,9 @@ export default function LottoPage() {
                         {results.map((r) => (
                           <tr key={r.panel}>
                             <td className="py-1 font-medium">{r.panel}</td>
-                            <td className="py-1">{r.picks.join(", ") || "—"}</td>
+                            <td className="py-1">
+                              {r.picks.join(", ") || "—"}
+                            </td>
                             <td className="py-1">{r.matchCount}</td>
                             <td className="py-1">{r.bonusMatch ? "✓" : "—"}</td>
                             <td className="py-1">{r.rank}</td>
@@ -809,17 +802,27 @@ export default function LottoPage() {
               </h2>
 
               <ul className="space-y-3 text-sm leading-relaxed">
-                <li>1️⃣ 각 용지(A–E)에서 원하는 번호를 최대 6개까지 선택하세요.</li>
                 <li>
-                  2️⃣ <span className="font-semibold">자동</span> 버튼으로 무작위 선택을 할 수 있고,{" "}
-                  <span className="font-semibold">취소</span> 버튼으로 초기화할 수 있습니다.
+                  1️⃣ 각 용지(A–E)에서 원하는 번호를 최대 6개까지 선택하세요.
                 </li>
                 <li>
-                  3️⃣ 준비가 되면 <span className="font-semibold">추첨하기 (6 + 보너스)</span>{" "}
+                  2️⃣ <span className="font-semibold">자동</span> 버튼으로 무작위
+                  선택을 할 수 있고, <span className="font-semibold">취소</span>{" "}
+                  버튼으로 초기화할 수 있습니다.
+                </li>
+                <li>
+                  3️⃣ 준비가 되면{" "}
+                  <span className="font-semibold">추첨하기 (6 + 보너스)</span>{" "}
                   버튼을 눌러 결과를 확인하세요.
                 </li>
-                <li>4️⃣ 결과 창에서 당첨 번호와 각 용지의 등수를 확인할 수 있습니다.</li>
-                <li>5️⃣ 일부 용지를 비워둬도 괜찮습니다. 단, 번호를 고른 용지는 반드시 6개를 모두 선택해야 합니다.</li>
+                <li>
+                  4️⃣ 결과 창에서 당첨 번호와 각 용지의 등수를 확인할 수
+                  있습니다.
+                </li>
+                <li>
+                  5️⃣ 일부 용지를 비워둬도 괜찮습니다. 단, 번호를 고른 용지는
+                  반드시 6개를 모두 선택해야 합니다.
+                </li>
               </ul>
 
               <div className="mt-6 flex justify-end">
